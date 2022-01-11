@@ -39,7 +39,6 @@ router.post('/', async(req,res) => {
             const { id } = await Posts.insert({title,contents})
             const newPost = await Posts.findById(id)
             res.status(201).json(newPost)
-            console.log(newPost)
         }
     }
     catch{
@@ -47,9 +46,27 @@ router.post('/', async(req,res) => {
     }
 })
 
-// router.put('/:id',(req,res)=> {
-
-// })
+router.put('/:id', async(req,res)=> {
+    const {id} = req.params
+    const {title,contents} = req.body
+    try{
+        const updatePost = await Posts.update(id,{title,contents})
+        if(!updatePost){
+            res.status(404).json({ message: "The post with the specified ID does not exist" })
+        }
+        else if(!title || !contents){
+            res.status(400).json({ message: "Please provide title and contents for the post" })
+        }  
+        else{
+            const newPost = await Posts.findById(id) 
+            res.status(201).json(newPost)
+        }
+        
+    }
+    catch{
+        res.status(500).json({ message: "The post information could not be modified" })
+    }
+})
 
 // router.delete('/:id',(req,res)=> {
 
