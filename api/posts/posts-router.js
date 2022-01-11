@@ -68,9 +68,23 @@ router.put('/:id', async(req,res)=> {
     }
 })
 
-// router.delete('/:id',(req,res)=> {
-
-// })
+router.delete('/:id', async(req,res)=> {
+    const {id} = req.params
+    try{
+        const postToDelete = await Posts.findById(id)
+        if(!postToDelete){
+            res.status(404).json({ message: "The post with the specified ID does not exist" })
+        }
+        else{
+            console.log(postToDelete)
+            res.json(postToDelete)
+            await Posts.remove(id)
+        }
+    }
+    catch{
+        res.status(500).json({ message: "The post could not be removed" })
+    }
+})
 
 // router.get('/:id/comments',(req,res)=> {
 
